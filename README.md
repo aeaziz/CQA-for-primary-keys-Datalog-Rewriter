@@ -1,11 +1,11 @@
 # CQA for primary keys Datalog Rewriter
 ## Introduction
 This is a python script that generates a Datalog program for the problem know in the litterature as CQA.
-By default, it takes a query in an input file and writes the output program in a file named "output.txt" but the main file can be easily modified to change this behavior.
+By default, it takes as input a file containing a sjfBCQ query and writes the output program in a file named "output.txt", but the main.py file can be easily modified to change this behavior.
 ## References
-*Jef Wijsen Paraschos Koutris.  Consistent query answering for self-join-free conjunctive queries under primary key constraints.  2017.
-*Jef Wijsen Paraschos Koutris.  Consistent query answering for primarykeys in datalog.  2019.
-*Jef Wijsen. Certain conjuctive query answering in first-order logic. 2012.
+* Jef Wijsen Paraschos Koutris.  Consistent query answering for self-join-free conjunctive queries under primary key constraints.  2017.
+* Jef Wijsen Paraschos Koutris.  Consistent query answering for primarykeys in datalog.  2019.
+* Jef Wijsen. Certain conjuctive query answering in first-order logic. 2012.
 ## What is a CQA Problem?
 CQA for primary keys is the following problem:
 
