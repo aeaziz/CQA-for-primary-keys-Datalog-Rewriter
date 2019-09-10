@@ -18,6 +18,14 @@ The main script takes as input a sjfBCQ using a specific syntax.
 The syntax is essentially the same than Datalog queries, but extending it with key-values being surrounded by [ ]
 
 Example : R([X],Y),S([Y],X) is a valid query.
+## How does it work?
+The articles in the References section talk about how the complexity of **CERTAINTY(q)** can be determined. 
+This code generates all the necessary tools (Attack Graph) to find the complexity of **CERTAINTY(q)**.
+As it is specified in the articles, there're 3 cases:
+* **CERTAINTY(Q)** is in **FO**
+* **CERTAINTY(Q)** is in **L**
+* **CERTAINTY(Q)** is in **Co-NPHard**
+For the 2 first cases, a Datalog rewrite is possible. The third case can be detected but a rewriting is not possible.
 
 ![f1]
 
