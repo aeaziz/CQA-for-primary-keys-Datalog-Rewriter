@@ -19,4 +19,8 @@ The syntax is essentially the same than Datalog queries, but extending it with k
 
 Example : R([X],Y),S([Y],X) is a valid query.
 
+![f1]
+
+[f1]: http://chart.apis.google.com/chart?cht=tx&chl=m=\frac{m_0}{\sqrt{1-{\frac{v^2}{c^2}}}}
+
 
