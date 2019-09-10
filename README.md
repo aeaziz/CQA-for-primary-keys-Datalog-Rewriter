@@ -21,6 +21,6 @@ Example : R([X],Y),S([Y],X) is a valid query.
 
 ![f1]
 
-[f1]: http://chart.apis.google.com/chart?cht=tx&chl=m=\exists\vec{v},R(\vec{X},\vec{y})
+[f1]: http://chart.apis.google.com/chart?cht=tx&chl=\exists\vec{v},R(\underline{\vec{x}},\vec{y})\wedge\forall\vec{z}(R(\underline{\vec{x}},\vec{z})\rightarrow(C\wedge\phi(\vec{v})))  
 
 
