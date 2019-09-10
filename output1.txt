@@ -1,0 +1,58 @@
+
+
+% Rewriting of G(Z, a)
+R_0 :- G(Z, a), not R_1(Z).
+R_1(Z) :- G(Z, Z_0), not R_2(Z, Z_0).
+R_2(Z, Z_0) :- Z_0=a, R_3(Z).
+
+
+% Captures facts with zero outdegree, belonging to a block containing a garbage fact
+Relevant_R(X, Y) :- R(X, Z, Y), S(Y, Z, X).
+Relevant_S(Y, X) :- R(X, Z, Y), S(Y, Z, X).
+Garbage_R(X) :- R(X, Z, Y), not Relevant_R(X, Y).
+Garbage_S(Y) :- S(Y, Z, X), not Relevant_S(Y, X).
+
+
+% Captures facts belonging to relevant 1-embeddings containing a garbage fact
+Garbage_R(X) :- R(X, Z, Y), S(Y, Z, X), Garbage_S(Y).
+Garbage_S(Y) :- R(X, Z, Y), S(Y, Z, X), Garbage_R(X).
+
+
+% Captures facts belonging to a n-embedding
+Pk(X1, Y2, X3) :- R(X1, Z, Y1), S(Y1, Z, X1), R(X2, Z, Y2), S(Y2, Z, X2), R(X3, Z, Y3), S(Y3, Z, X3), Y2=Y1, X3=X2, X1!=X3.
+DCon(X5, X5, Y2) :- R(X5, Z, Y5), S(Y5, Z, X5), Pk(X1, Y2, X3).
+DCon(X1, X5, Y2) :- DCon(X1, X6, Y2), Pk(X6, Y4, X5), Y4!=Y2.
+InLongDCycle(X1, Y2) :- Pk(X1, Y2, X3), DCon(X3, X1, Y2).
+
+
+% All facts belonging to a n-embedding must be in the maximal garbage-set
+Garbage_R(X) :- InLongDCycle(X, Y).
+Garbage_S(Y) :- InLongDCycle(X, Y).
+
+
+% We keep only facts that are not in the garbage set
+Keep_R(X, Y) :- R(X, Z, Y), not Garbage_R(X).
+Keep_S(Y, X) :- S(Y, Z, X), not Garbage_S(Y).
+Link(X, X1) :- Keep_R(X, Y), Keep_S(Y, X), Keep_R(X1, Y1), Keep_S(Y1, X1), X=X1.
+Link(X, X1) :- Keep_R(X, Y), Keep_S(Y, X), Keep_R(X1, Y1), Keep_S(Y1, X1), Y=Y1.
+Trans(X, X1) :- Link(X, X1).
+Trans(X, X1) :- Trans(X, X2), Link(X2, X1).
+Trans(X, X2) :- Trans(X, X1), Link(X2, X1).
+IdentifiedBy(X, X1) :- #min{X3 : Trans(X, X3)} = X1, Link(X, X2).
+T(X1, X, Y) :- Keep_R(X, Z, Y), Keep_S(Y, Z, X), IdentifiedBy(X, X1).
+N_R(X, X1) :- T(X1, X, Y).
+N_S(Y, X1) :- T(X1, X, Y).
+
+
+% Rewriting of T(X1, X, Y)
+R_3(Z) :- G(Z, a), T(X1, X, Y), not R_4(Z, X1).
+R_4(Z, X1) :- G(Z, a), T(X1, Z_0, Z_1), not R_5(Z, X1, Z_0, Z_1).
+R_5(Z, X1, X, Y) :- G(Z, a), R_6(Z, X1, X, Y).
+
+
+% Rewriting of N_S(Y, X1)
+R_6(Z, X1, X, Y) :- G(Z, a), T(X1, X, Y), N_S(Y, X1), R_7(Z, X1, X, Y).
+
+
+% Rewriting of N_R(X, X1)
+R_7(Z, X1, X, Y) :- G(Z, a), T(X1, X, Y), N_S(Y, X1), N_R(X, X1).

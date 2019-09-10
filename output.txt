@@ -1,0 +1,12 @@
+
+
+% Rewriting of S(Y, a, Y, Z)
+R_0 :- S(Y, a, Y, Z), not R_1(Y).
+R_1(Y) :- S(Y, Z_0, Z_1, Z_2), not R_2(Y, Z_2, Z_0, Z_1).
+R_2(Y, Z, Z_0, Z_1) :- S(Y, Z_0, Z_1, Z), Z_0=a, Z_1=Y, R_3(Y, Z).
+
+
+% Rewriting of T(Z, e)
+R_3(Y, Z) :- S(Y, a, Y, Z), T(Z, e), not R_4(Y, Z).
+R_4(Y, Z) :- S(Y, a, Y, Z), T(Z, Z_0), not R_5(Y, Z, Z_0).
+R_5(Y, Z, Z_0) :- S(Y, a, Y, Z), T(Z, Z_0), Z_0=e.
