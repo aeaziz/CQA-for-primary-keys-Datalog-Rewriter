@@ -40,9 +40,9 @@ Where ![v] is the sequence of variables appearing in R.
 A Datalog rewriting of this formula:
 
 ```
-R_0 :- R(![x],![y]), not R_1(![x])
-R_1(![x]) :- R(![x],![z1], ![z2]), not R_2(![x],![z1],![z2])
-R_2(![x],![y],![z2]) :- R(![x],![z1], ![z2]), C, R_3(![x],![y])
+R_0 :- R(X,Y), not R_1(X)
+R_1(X) :- R(X,Z1,Z2), not R_2(X,Z1,Z2)
+R_2(X,Y,Z2) :- R(X,Y,Z2), C, R_3(X,Y)
 ```
 
 [f1]: http://chart.apis.google.com/chart?cht=tx&chl=\exists\vec{v},R(\underline{\vec{x}},\vec{y})\wedge\forall\vec{z}(R(\underline{\vec{x}},\vec{z})\rightarrow(C\wedge\phi(\vec{v})))  
