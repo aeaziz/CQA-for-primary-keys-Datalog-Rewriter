@@ -35,7 +35,12 @@ Theory tells us that in that case, this atom can be rewrited in FO. The 2012 art
 
 ![f1]
 
-Where ![v] is the sequence of variables appearing in R.
+Where :
+* ![v] is the sequence of variables appearing in R.
+* C is a set of equalities initially empty.
+* ![z] is a vector with the same size of ![y] which is constructed in the following way for every ![yi] in ![y]:
+	* if ![yi] appears in ![x], ![yi] is a constant or for some j, then ![zi] is a fresh variable and C contains  ![zi] = ![yi]
+	* else, ![zi] = ![yi]
 
 A Datalog rewriting of this formula:
 
@@ -45,12 +50,17 @@ R_1(X) :- R(X,Z1,Z2), not R_2(X,Z1,Z2)
 R_2(X,Y,Z2) :- R(X,Y,Z2), C, R_3(X,Y)
 ```
 
+Where X,Y,Z1,Z2 take the values from vectors ![x], ![y], ![z1], ![z2]
+
 [f1]: http://chart.apis.google.com/chart?cht=tx&chl=\exists\vec{v},R(\underline{\vec{x}},\vec{y})\wedge\forall\vec{z}(R(\underline{\vec{x}},\vec{z})\rightarrow(C\wedge\phi(\vec{v})))  
 
 [x]: http://chart.apis.google.com/chart?cht=tx&chl=\underline{\vec{x}}
-[y]: http://chart.apis.google.com/chart?cht=tx&chl=\vec{v} 
+[y]: http://chart.apis.google.com/chart?cht=tx&chl=\vec{y}
+[yi]: http://chart.apis.google.com/chart?cht=tx&chl=y_i 
+[yj]: http://chart.apis.google.com/chart?cht=tx&chl=y_j 
 [v]: http://chart.apis.google.com/chart?cht=tx&chl=\vec{v} 
 [z]: http://chart.apis.google.com/chart?cht=tx&chl=\vec{z} 
+[zi]: http://chart.apis.google.com/chart?cht=tx&chl=z_i 
 [z1]: http://chart.apis.google.com/chart?cht=tx&chl=\vec{z_1} 
 [z2]: http://chart.apis.google.com/chart?cht=tx&chl=\vec{z_2} 
 
