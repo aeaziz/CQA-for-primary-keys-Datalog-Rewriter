@@ -32,13 +32,27 @@ For the 2 first cases, a Datalog rewrite is possible. The third case can be dete
 ### Rewriting an unattacked atom
 We say that an atom A is unattacked if for every atom B, there isn't an edge A->B in the attack graph.
 Theory tells us that in that case, this atom can be rewrited in FO. The 2012 article gives us this formula :
+
 ![f1]
+
 Where ![v] is the sequence of variables appearing in R.
+
+A Datalog rewriting of this formula:
+
+```
+R_0 :- R(![x],![y]), not R_1(![x])
+R_1(![x]) :- R(![x],![z1], ![z2]), not R_2(![x],![z1],![z2])
+R_2(![x],![y],![z2]) :- R(![x],![z1], ![z2]), C, R_3(![x],![y])
+```
 
 [f1]: http://chart.apis.google.com/chart?cht=tx&chl=\exists\vec{v},R(\underline{\vec{x}},\vec{y})\wedge\forall\vec{z}(R(\underline{\vec{x}},\vec{z})\rightarrow(C\wedge\phi(\vec{v})))  
 
+[x]: http://chart.apis.google.com/chart?cht=tx&chl=\underline{\vec{x}}
+[y]: http://chart.apis.google.com/chart?cht=tx&chl=\vec{v} 
 [v]: http://chart.apis.google.com/chart?cht=tx&chl=\vec{v} 
 [z]: http://chart.apis.google.com/chart?cht=tx&chl=\vec{z} 
+[z1]: http://chart.apis.google.com/chart?cht=tx&chl=\vec{z_1} 
+[z2]: http://chart.apis.google.com/chart?cht=tx&chl=\vec{z_2} 
 
 
 
