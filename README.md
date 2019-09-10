@@ -22,13 +22,24 @@ Example : R([X],Y),S([Y],X) is a valid query.
 The articles in the References section talk about how the complexity of **CERTAINTY(q)** can be determined. 
 This code generates all the necessary tools (Attack Graph) to find the complexity of **CERTAINTY(q)**.
 As it is specified in the articles, there're 3 cases:
+
 * **CERTAINTY(Q)** is in **FO**
 * **CERTAINTY(Q)** is in **L**
 * **CERTAINTY(Q)** is in **Co-NPHard**
+
 For the 2 first cases, a Datalog rewrite is possible. The third case can be detected but a rewriting is not possible.
 
+### Rewriting an unattacked atom
+We say that an atom A is unattacked if for every atom B, there isn't an edge A->B in the attack graph.
+Theory tells us that in that case, this atom can be rewrited in FO. The 2012 article gives us this formula :
 ![f1]
+Where ![v] is the sequence of variables appearing in R.
 
 [f1]: http://chart.apis.google.com/chart?cht=tx&chl=\exists\vec{v},R(\underline{\vec{x}},\vec{y})\wedge\forall\vec{z}(R(\underline{\vec{x}},\vec{z})\rightarrow(C\wedge\phi(\vec{v})))  
+
+[v]: http://chart.apis.google.com/chart?cht=tx&chl=\vec{v} 
+[z]: http://chart.apis.google.com/chart?cht=tx&chl=\vec{z} 
+
+
 
 
