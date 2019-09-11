@@ -3,9 +3,9 @@
 This is a python script that generates a Datalog program for the problem know in the litterature as CQA.
 By default, it takes as input a file containing a sjfBCQ query and writes the output program in a file named "output.txt", but the main.py file can be easily modified to change this behavior.
 ## References
-* Jef Wijsen Paraschos Koutris.  Consistent query answering for self-join-free conjunctive queries under primary key constraints.  2017.
-* Jef Wijsen Paraschos Koutris.  Consistent query answering for primarykeys in datalog.  2019.
-* Jef Wijsen. Certain conjuctive query answering in first-order logic. 2012.
+* \[1\] Jef Wijsen, Paraschos Koutris.  Consistent query answering for primarykeys in datalog.  2019.
+* \[2\] Jef Wijsen, Paraschos Koutris.  Consistent query answering for self-join-free conjunctive queries under primary key constraints.  2017.
+* \[3\] Jef Wijsen. Certain conjuctive query answering in first-order logic. 2012.
 ## What is a CQA Problem?
 **CQA** for primary keys is the following problem:
 
@@ -31,7 +31,7 @@ For the 2 first cases, a Datalog rewrite is possible. The third case can be dete
 
 ### Rewriting an unattacked atom
 We say that an atom A is unattacked if for every atom B, there isn't an edge B->A in the attack graph.
-Theory tells us that in that case, this atom can be rewrited in FO. The 2012 article gives us this formula :
+Theory tells us that in that case, this atom can be rewrited in FO. \[3\] gives us this formula :
 
 ![f1]
 
@@ -65,7 +65,11 @@ Notice that rule R_2 is safe as Z1 is a subset of Y and appears in C.
 As you notice, this only requires the compute of ![v], ![z] and C! 
 
 ### Rewriting a weak cycle
-Theory says that **CERTAINTY(q)** is in **L** if and only if the **Attack Graph** of q contains no strong cycle. Please read 2019 article to discover what a "strong" cycle in the **Attack Graph** stand for.
+In this section i use notions like **Strong cycles**, **M-Graph**,**![m] -Graph**, **Block-Quotient Graph**, **1-embedding**, etc...
+
+To know the meaning of these notions, please give a look to **\[1\]**.
+
+Theory says that **CERTAINTY(q)** is in **L** if and only if the **Attack Graph** of q contains no strong cycle. 
 
 The detection of cycles can be done with classic cycle detection algorithms. Checking if a cycle is strong can also be done in polynomial time.
 
@@ -73,7 +77,7 @@ Once we're sure that there's no strong cycle, we have to rewrite the weak ones.
 
 Let C be the cycle to be removed. Theory shows us a method based in the removal of **Garbage-sets** :  facts that do not affect the result of **CERTAINTY(q)**.
 
-The removal of the **Garbage-sets** involves the generation of necessary tools (M-Graph) and the generation of Datalog rules allowing to keep the facts that do not belong to a **Garbag-Set** :
+The code generates necessary tools (M-Graph) and a set of Datalog rules that keep the facts that do not belong to a **Garbag-Set** :
 
 * **Relevant_Ri** rules to find the facts Ri that do belong to a relevant **1-embedding**.
 * **Pk** rule that verify the existence of a directed path in the block-quotient graph.
