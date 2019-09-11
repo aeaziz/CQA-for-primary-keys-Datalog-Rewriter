@@ -1,6 +1,6 @@
 # CQA for primary keys Datalog Rewriter
 ## Introduction
-This is a python script that generates a Datalog program for the problem know in the litterature as CQA.
+This is a Python 3.X script that generates a Datalog program for the problem know in the litterature as CQA.
 By default, it takes as input a file containing a sjfBCQ query and writes the output program in a file named "output.txt", but the main.py file can be easily modified to change this behavior.
 ## References
 * \[1\] Jef Wijsen, Paraschos Koutris.  Consistent query answering for primarykeys in datalog.  2019.
@@ -128,7 +128,7 @@ if a do not contain any strong cycle:
 		for unattacked vertex in a:
 			rewrite unattacked vertex using FO logic
 		if a is not empty:
-			rewrite a weak cycle using L logic
+			rewrite a cycle in the M-Graph using L logic
 												
 
 ```
