@@ -88,6 +88,8 @@ The code generates necessary tools (M-Graph) and a set of Datalog rules that kee
 
 Indeed, the removal of this **Garbage-set** will keep only a set of relevant **1-embeddings** that can be encoded by a fresh relation T(![u], ![w]) where Vars(![w]) = Vars(C) and **u** is a fresh variable that is used as identifier for every strong component in the ![m] graph.
 
+After that, we can study the query **q'** = (**q** \ C) U {T} U p where p is a set of relations ni for every relation ![fi] in C.
+
 
 
 [f1]: http://chart.apis.google.com/chart?cht=tx&chl=\exists\vec{v},R(\underline{\vec{x}},\vec{y})\wedge\forall\vec{z}(R(\underline{\vec{x}},\vec{z})\rightarrow(C\wedge\phi(\vec{v})))  
@@ -104,6 +106,8 @@ Indeed, the removal of this **Garbage-set** will keep only a set of relevant **1
 [u]: http://chart.apis.google.com/chart?cht=tx&chl=\underline{u} 
 [w]: http://chart.apis.google.com/chart?cht=tx&chl=\vec{w} 
 [m]: https://chart.apis.google.com/chart?cht=tx&chl=\rightarrow^C
+[ni]: https://chart.apis.google.com/chart?cht=tx&chl=N_i(\underline{Key(F_i)},u)
+[fi]: https://chart.apis.google.com/chart?cht=tx&chl=F_i
 
 
 
