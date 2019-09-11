@@ -82,7 +82,9 @@ The removal of the **Garbage-sets** involves the generation of necessary tools (
 * **Garbage_Ri** rules that finds the facts Ri belonging to a garbage set.
 * **Keep_Ri** rules that keeps the fact Ri that do not belong to a garbage set.
 
-Indeed, the removal of this **Garbage-set** will keep only a set of relevant **1-embeddings** that can be encoded by a fresh atom **T(u, ![w])** where Vars(![w]) = Vars(C) and **u** is a fresh variable that is used as identifier for every strong component in the ![m] graph
+Indeed, the removal of this **Garbage-set** will keep only a set of relevant **1-embeddings** that can be encoded by a fresh atom **T(u, ![w])** where Vars(![w]) = Vars(C) and **u** is a fresh variable that is used as identifier for every strong component in the ![m] graph.
+
+
 
 [f1]: http://chart.apis.google.com/chart?cht=tx&chl=\exists\vec{v},R(\underline{\vec{x}},\vec{y})\wedge\forall\vec{z}(R(\underline{\vec{x}},\vec{z})\rightarrow(C\wedge\phi(\vec{v})))  
 
@@ -96,7 +98,7 @@ Indeed, the removal of this **Garbage-set** will keep only a set of relevant **1
 [z1]: http://chart.apis.google.com/chart?cht=tx&chl=\vec{z_1} 
 [phi]: http://chart.apis.google.com/chart?cht=tx&chl=\phi(\vec{v}) 
 [w]: http://chart.apis.google.com/chart?cht=tx&chl=\vec{w} 
-[m]: http://chart.apis.google.com/chart?cht=tx&chl=\hookrightarrow 
+[m]: https://chart.apis.google.com/chart?cht=tx&chl=\rightarrow^C
 
 
 
