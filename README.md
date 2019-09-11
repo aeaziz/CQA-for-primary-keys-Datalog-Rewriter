@@ -17,7 +17,7 @@ This scripts impliments **CERTAINTY(q)** in a **Datalog** program.
 The main script takes as input a sjfBCQ using a specific syntax.
 The syntax is essentially the same than Datalog queries, but extending it with key-values being surrounded by [ ]
 
-Example : R([X],Y),S([Y],X) is a valid query.
+Example : R(\[X\],Y),S(\[Y\],X) is a valid query.
 ## How does it work?
 The articles in the References section talk about how the complexity of **CERTAINTY(q)** can be determined. 
 This code generates all the necessary tools (Attack Graph) to find the complexity of **CERTAINTY(q)**.
@@ -71,7 +71,7 @@ The detection of cycles can be done with classic cycle detection algorithms. Che
 
 Once we're sure that there's no strong cycle, we have to rewrite the weak ones. 
 
-Let C be the cycle to be removed. Theory shows us a method based in the removal of **Garbage-sets** that does not affect the result of **CERTAINTY(q)**.
+Let C be the cycle to be removed. Theory shows us a method based in the removal of **Garbage-sets** :  facts that do not affect the result of **CERTAINTY(q)**.
 
 The removal of the **Garbage-sets** involves the generation of necessary tools (M-Graph) and the generation of Datalog rules allowing to keep the facts that do not belong to a **Garbag-Set** :
 
@@ -82,7 +82,7 @@ The removal of the **Garbage-sets** involves the generation of necessary tools (
 * **Garbage_Ri** rules that finds the facts Ri belonging to a garbage set.
 * **Keep_Ri** rules that keeps the fact Ri that do not belong to a garbage set.
 
-Indeed, the removal of this **Garbage-set** will keep only a set of relevant **1-embeddings** that can be encoded by a fresh atom **T(u, ![w])** where Vars(![w]) = Vars(C) and **u** is a fresh variable that is used as identifier for every strong component in the ![m] graph.
+Indeed, the removal of this **Garbage-set** will keep only a set of relevant **1-embeddings** that can be encoded by a fresh relation T(![u], ![w]) where Vars(![w]) = Vars(C) and **u** is a fresh variable that is used as identifier for every strong component in the ![m] graph.
 
 
 
@@ -97,6 +97,7 @@ Indeed, the removal of this **Garbage-set** will keep only a set of relevant **1
 [zi]: http://chart.apis.google.com/chart?cht=tx&chl=z_i 
 [z1]: http://chart.apis.google.com/chart?cht=tx&chl=\vec{z_1} 
 [phi]: http://chart.apis.google.com/chart?cht=tx&chl=\phi(\vec{v}) 
+[w]: http://chart.apis.google.com/chart?cht=tx&chl=\underline{w} 
 [w]: http://chart.apis.google.com/chart?cht=tx&chl=\vec{w} 
 [m]: https://chart.apis.google.com/chart?cht=tx&chl=\rightarrow^C
 
