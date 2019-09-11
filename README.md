@@ -39,8 +39,13 @@ Where :
 * ![v] is the sequence of variables appearing in R.
 * C is a set of equalities initially empty.
 * ![z] is a vector with the same size of ![y] which is constructed in the following way for every ![yi] in ![y]:
-	* if ![yi] appears in ![x], ![yi] is a constant or for some j, then ![zi] is a fresh variable and C contains  ![zi] = ![yi]
+	* if:
+		* ![yi] appears in ![x]
+		* ![yi] is a constant
+		* for some j < i, ![yi] = ![yj]
+	* then ![zi] is a fresh variable and C contains  ![zi] = ![yi]
 	* else, ![zi] = ![yi]
+* ![phi] is the rewriting of **q'**=**q** \ {R(![x], ![y])}
 
 To make easier the Datalog rewrite, i use a supplementary vector ![z1] that contains every fresh variable ![zi].
 A Datalog rewriting of this formula:
@@ -52,6 +57,7 @@ R_2(X,Y,Z1) :- R(X,Y), C, R_3(X,Y)
 ```
 
 Where X,Y,Z,Z1 take the values from vectors ![x], ![y], ![z], ![z1].
+
 Notice that rule R_2 is safe as Z1 is a subset of Y and appears in C.
 
 [f1]: http://chart.apis.google.com/chart?cht=tx&chl=\exists\vec{v},R(\underline{\vec{x}},\vec{y})\wedge\forall\vec{z}(R(\underline{\vec{x}},\vec{z})\rightarrow(C\wedge\phi(\vec{v})))  
@@ -64,7 +70,7 @@ Notice that rule R_2 is safe as Z1 is a subset of Y and appears in C.
 [z]: http://chart.apis.google.com/chart?cht=tx&chl=\vec{z} 
 [zi]: http://chart.apis.google.com/chart?cht=tx&chl=z_i 
 [z1]: http://chart.apis.google.com/chart?cht=tx&chl=\vec{z_1} 
-[z2]: http://chart.apis.google.com/chart?cht=tx&chl=\vec{z_2} 
+[phi]: http://chart.apis.google.com/chart?cht=tx&chl=\phi(\vec{v}) 
 
 
 
