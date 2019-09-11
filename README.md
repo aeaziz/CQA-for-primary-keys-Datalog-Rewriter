@@ -88,7 +88,7 @@ The code generates necessary tools (M-Graph) and a set of Datalog rules that kee
 
 Indeed, the removal of this **Garbage-set** will keep only a set of relevant **1-embeddings** that can be encoded by a fresh relation T(![u], ![w]) where Vars(![w]) = Vars(C) and **u** is a fresh variable that is used as identifier for every strong component in the ![m] graph.
 
-After that, we can study the query **q'** = (**q** \ C) U {T} U p where p is a set of relations ni for every relation ![fi] in C.
+After that, we can study the query **q'** = (**q** \ C) U {T} U p where p is a set of relations ![ni] for every relation ![fi] in C.
 
 
 
