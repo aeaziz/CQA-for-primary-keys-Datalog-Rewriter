@@ -90,6 +90,10 @@ Indeed, the removal of this **Garbage-set** will keep only a set of relevant **1
 
 After that, we can study the query **q'** = (**q** \ C) U {T} U p where p is a set of relations ![ni] for every relation ![fi] in C.
 
+The creation of these relations is made by adding Datalog rules.
+
+The sub-query {T} U p contains no cycle and,thus, we can apply the FO method.
+
 
 
 [f1]: http://chart.apis.google.com/chart?cht=tx&chl=\exists\vec{v},R(\underline{\vec{x}},\vec{y})\wedge\forall\vec{z}(R(\underline{\vec{x}},\vec{z})\rightarrow(C\wedge\phi(\vec{v})))  
@@ -106,7 +110,7 @@ After that, we can study the query **q'** = (**q** \ C) U {T} U p where p is a s
 [u]: http://chart.apis.google.com/chart?cht=tx&chl=\underline{u} 
 [w]: http://chart.apis.google.com/chart?cht=tx&chl=\vec{w} 
 [m]: https://chart.apis.google.com/chart?cht=tx&chl=\rightarrow^C
-[ni]: https://chart.apis.google.com/chart?cht=tx&chl=N_i(\underline{Key(F_i)},u)
+[ni]: https://chart.apis.google.com/chart?cht=tx&chl=N_i^c(\underline{Key(F_i)},u)
 [fi]: https://chart.apis.google.com/chart?cht=tx&chl=F_i
 
 
