@@ -101,7 +101,7 @@ Indeed, the removal of this **Garbage-set** will keep only a set of relevant **1
 [zi]: http://chart.apis.google.com/chart?cht=tx&chl=z_i 
 [z1]: http://chart.apis.google.com/chart?cht=tx&chl=\vec{z_1} 
 [phi]: http://chart.apis.google.com/chart?cht=tx&chl=\phi(\vec{v}) 
-[w]: http://chart.apis.google.com/chart?cht=tx&chl=\underline{w} 
+[u]: http://chart.apis.google.com/chart?cht=tx&chl=\underline{u} 
 [w]: http://chart.apis.google.com/chart?cht=tx&chl=\vec{w} 
 [m]: https://chart.apis.google.com/chart?cht=tx&chl=\rightarrow^C
 
