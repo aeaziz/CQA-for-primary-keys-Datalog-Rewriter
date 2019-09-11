@@ -49,18 +49,32 @@ Where :
 
 Unformally, this formula searches for blocks of key-equal facts where every fact of the block verifies **q'**.
 
-To make easier the Datalog rewrite, i use a supplementary vector ![z1] that contains every fresh variable ![zi].
+To make easier the Datalog rewrite, i use 2 supplementary vectors ![z1] and ![z2] that are constructed in the following way for every ![yi] in ![y]:
+	* if:
+		* ![yi] appears in ![x]
+		* ![yi] is a constant
+		* for some j < i, ![yi] = ![yj]
+	* then ![z2] contains ![zi] 
+	* else, ![z1] contains ![zi]
+
+
 A Datalog rewriting of this formula:
 
 ```
 R_0 :- R(X,Y), not R_1(X)
-R_1(X) :- R(X,Z), not R_2(X,Z,Z1)
-R_2(X,Y,Z1) :- R(X,Y), C, R_3(X,Y)
+R_1(X) :- R(X,Z), not R_2(X,Z1,Z2)
+R_2(X,Y,Z2) :- R(X,Z'), C, R_3(X,Y)
 ```
 
-Where X,Y,Z,Z1 take the values from vectors ![x], ![y], ![z], ![z1] and R_3 is the rewriting of **q'**=**q** \ {R(![x], ![y])}.
+Where :
+* X,Y,Z,Z1,Z2 take the values from vectors ![x], ![y], ![z], ![z1], ![z2]
+* Z' is the vector Z where:
+	* if ![zi] is in ![z1]
+	* then ![zi] = ![yi]
+		
+* R_3 is the rewriting of **q'**=**q** \ {R(![x], ![y])}.
 
-Notice that rule R_2 is safe as Z1 is a subset of Y and appears in C.
+
 
 As you notice, this only requires the compute of ![v], ![z] and C! 
 
@@ -92,7 +106,7 @@ After that, we can study the query **q'** = (**q** \ C) U {T} U p where p is a s
 
 The creation of these relations is made by adding Datalog rules.
 
-The sub-query {T} U p contains no cycle and,thus, we can apply the FO method.
+The sub-query {T} U p contains no cycle and,thus, we can apply the first method.
 
 
 
@@ -106,6 +120,7 @@ The sub-query {T} U p contains no cycle and,thus, we can apply the FO method.
 [z]: http://chart.apis.google.com/chart?cht=tx&chl=\vec{z} 
 [zi]: http://chart.apis.google.com/chart?cht=tx&chl=z_i 
 [z1]: http://chart.apis.google.com/chart?cht=tx&chl=\vec{z_1} 
+[z2]: http://chart.apis.google.com/chart?cht=tx&chl=\vec{z_2} 
 [phi]: http://chart.apis.google.com/chart?cht=tx&chl=\phi(\vec{v}) 
 [u]: http://chart.apis.google.com/chart?cht=tx&chl=\underline{u} 
 [w]: http://chart.apis.google.com/chart?cht=tx&chl=\vec{w} 
