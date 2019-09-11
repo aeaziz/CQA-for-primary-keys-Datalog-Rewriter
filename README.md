@@ -45,7 +45,9 @@ Where :
 		* for some j < i, ![yi] = ![yj]
 	* then ![zi] is a fresh variable and C contains  ![zi] = ![yi]
 	* else, ![zi] = ![yi]
-* ![phi] is the rewriting of **q'**=**q** \ {R(![x], ![y])}
+* ![phi] is the rewriting of **q'**=**q** \ {R(![x], ![y])} where all the variables of ![v] become constants.
+
+Unformally, this formula searches for blocks of key-equal facts where every fact of the block verifies **q'**.
 
 To make easier the Datalog rewrite, i use a supplementary vector ![z1] that contains every fresh variable ![zi].
 A Datalog rewriting of this formula:
@@ -56,9 +58,31 @@ R_1(X) :- R(X,Z), not R_2(X,Z,Z1)
 R_2(X,Y,Z1) :- R(X,Y), C, R_3(X,Y)
 ```
 
-Where X,Y,Z,Z1 take the values from vectors ![x], ![y], ![z], ![z1].
+Where X,Y,Z,Z1 take the values from vectors ![x], ![y], ![z], ![z1] and R_3 is the rewriting of **q'**=**q** \ {R(![x], ![y])}.
 
 Notice that rule R_2 is safe as Z1 is a subset of Y and appears in C.
+
+As you notice, this only requires the compute of ![v], ![z] and C! 
+
+### Rewriting a weak cycle
+Theory says that **CERTAINTY(q)** is in **L** if and only if the **Attack Graph** of q contains no strong cycle. Please read 2019 article to discover what a "strong" cycle in the **Attack Graph** stand for.
+
+The detection of cycles can be done with classic cycle detection algorithms. Checking if a cycle is strong can also be done in polynomial time.
+
+Once we're sure that there's no strong cycle, we have to rewrite the weak ones. 
+
+Let C be the cycle to be removed. Theory shows us a method based in the removal of **Garbage-sets** that does not affect the result of **CERTAINTY(q)**.
+
+The removal of the **Garbage-sets** involves the generation of necessary tools (M-Graph) and the generation of Datalog rules allowing to keep the facts that do not belong to a **Garbag-Set** :
+
+* **Relevant_Ri** rules to find the facts Ri that do belong to a relevant **1-embedding**.
+* **Pk** rule that verify the existence of a directed path in the block-quotient graph.
+* **Dcon** rules that veryfies the existence of a direct path between 2 blocks in the block-quotient graph without using a set of banned blocks.
+* **InLongDCycle** rule that finds cycles in the block-quotient graph.
+* **Garbage_Ri** rules that finds the facts Ri belonging to a garbage set.
+* **Keep_Ri** rules that keeps the fact Ri that do not belong to a garbage set.
+
+Indeed, the removal of this **Garbage-set** will keep only a set of relevant **1-embeddings** that can be encoded by a fresh atom **T(u, ![w])** where Vars(![w]) = Vars(C) and **u** is a fresh variable that is used as identifier for every strong component in the ![m] graph
 
 [f1]: http://chart.apis.google.com/chart?cht=tx&chl=\exists\vec{v},R(\underline{\vec{x}},\vec{y})\wedge\forall\vec{z}(R(\underline{\vec{x}},\vec{z})\rightarrow(C\wedge\phi(\vec{v})))  
 
@@ -71,6 +95,9 @@ Notice that rule R_2 is safe as Z1 is a subset of Y and appears in C.
 [zi]: http://chart.apis.google.com/chart?cht=tx&chl=z_i 
 [z1]: http://chart.apis.google.com/chart?cht=tx&chl=\vec{z_1} 
 [phi]: http://chart.apis.google.com/chart?cht=tx&chl=\phi(\vec{v}) 
+[w]: http://chart.apis.google.com/chart?cht=tx&chl=\vec{w} 
+[m]: http://chart.apis.google.com/chart?cht=tx&chl=\hookrightarrow 
+
 
 
 
