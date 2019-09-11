@@ -30,7 +30,7 @@ As it is specified in the articles, there're 3 cases:
 For the 2 first cases, a Datalog rewrite is possible. The third case can be detected but a rewriting is not possible.
 
 ### Rewriting an unattacked atom
-We say that an atom A is unattacked if for every atom B, there isn't an edge A->B in the attack graph.
+We say that an atom A is unattacked if for every atom B, there isn't an edge B->A in the attack graph.
 Theory tells us that in that case, this atom can be rewrited in FO. The 2012 article gives us this formula :
 
 ![f1]
@@ -42,15 +42,17 @@ Where :
 	* if ![yi] appears in ![x], ![yi] is a constant or for some j, then ![zi] is a fresh variable and C contains  ![zi] = ![yi]
 	* else, ![zi] = ![yi]
 
+To make easier the Datalog rewrite, i use a supplementary vector ![z1] that contains every fresh variable ![zi].
 A Datalog rewriting of this formula:
 
 ```
 R_0 :- R(X,Y), not R_1(X)
-R_1(X) :- R(X,Z1,Z2), not R_2(X,Z1,Z2)
-R_2(X,Y,Z2) :- R(X,Y,Z2), C, R_3(X,Y)
+R_1(X) :- R(X,Z), not R_2(X,Z,Z1)
+R_2(X,Y,Z1) :- R(X,Y), C, R_3(X,Y)
 ```
 
-Where X,Y,Z1,Z2 take the values from vectors ![x], ![y], ![z1], ![z2]
+Where X,Y,Z,Z1 take the values from vectors ![x], ![y], ![z], ![z1].
+Notice that rule R_2 is safe as Z1 is a subset of Y and appears in C.
 
 [f1]: http://chart.apis.google.com/chart?cht=tx&chl=\exists\vec{v},R(\underline{\vec{x}},\vec{y})\wedge\forall\vec{z}(R(\underline{\vec{x}},\vec{z})\rightarrow(C\wedge\phi(\vec{v})))  
 
