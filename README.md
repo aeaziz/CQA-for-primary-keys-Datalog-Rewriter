@@ -39,25 +39,24 @@ Where :
 * ![v] is the sequence of variables appearing in R.
 * C is a set of equalities initially empty.
 * ![z] is a vector with the same size of ![y] which is constructed in the following way for every ![yi] in ![y]:
-
 	* if:
 		* ![yi] appears in ![x]
 		* ![yi] is a constant
 		* for some j < i, ![yi] = ![yj]
 	* then ![zi] is a fresh variable and C contains  ![zi] = ![yi]
 	* else, ![zi] = ![yi]
-
 * ![phi] is the rewriting of **q'**=**q** \ {R(![x], ![y])} where all the variables of ![v] become constants.
 
 Unformally, this formula searches for blocks of key-equal facts where every fact of the block verifies **q'**.
 
 To make easier the Datalog rewrite, i use 2 supplementary vectors ![z1] and ![z2] that are constructed in the following way for every ![yi] in ![y]:
-	* if:
-		* ![yi] appears in ![x]
-		* ![yi] is a constant
-		* for some j < i, ![yi] = ![yj]
-	* then ![z2] contains ![zi] 
-	* else, ![z1] contains ![zi]
+
+* if:
+	* ![yi] appears in ![x]
+	* ![yi] is a constant
+	* for some j < i, ![yi] = ![yj]
+* then ![z2] contains ![zi] 
+* else, ![z1] contains ![zi]
 
 
 A Datalog rewriting of this formula:
