@@ -15,7 +15,7 @@ For every sjfCBQ **q**, **CERTAINTY(q)** is the problem that takes as input **db
 This scripts impliments **CERTAINTY(q)** in a **Datalog** program.
 ## Usage
 The main script takes as input a sjfBCQ using a specific syntax.
-The syntax is essentially the same than Datalog queries, but extending it with key-values being surrounded by [ ]
+The syntax is essentially the same than Datalog rules, but extending it with key-values being surrounded by [ ]
 
 Example : R(\[X\],Y),S(\[Y\],X) is a valid query.
 ## How does it work?
@@ -28,6 +28,15 @@ As it is specified in the articles, there're 3 cases:
 * **CERTAINTY(Q)** is in **Co-NPHard**
 
 For the 2 first cases, a Datalog rewrite is possible. The third case can be detected but a rewriting is not possible.
+
+### Saturated query
+The following process suppose that q is saturated. In [1], there's a proof that for every sjfBCQ **q**, a sjfBCQ **q'** such that:
+
+* **CERTAINTY(q)** = **CERTAINTY(q')**
+* **q'** is saturated
+* the redcution from **q** to **q'** is in FO.
+
+This process of saturation is implemented by checking if q is saturated and, if it is not, adding a set of rules at the start of the Datalog program that ensures that **q** is saturated.
 
 ### Rewriting an unattacked atom
 We say that an atom A is unattacked if for every atom B, there isn't an edge B->A in the attack graph.
@@ -109,7 +118,20 @@ The creation of these relations is made by adding Datalog rules.
 
 The sub-query {T} U p contains no cycle and,thus, we can apply the first method.
 
+### Main Algorithm
+```
+if q is not saturated:
+	q = saturate(q)
+a = Attack Graph of q
+if a do not contain any strong cycle:
+	while a is not empty:
+		for unattacked vertex in a:
+			rewrite unattacked vertex using FO logic
+		if a is not empty:
+			rewrite a weak cycle using L logic
+												
 
+```
 
 [f1]: http://chart.apis.google.com/chart?cht=tx&chl=\exists\vec{v},R(\underline{\vec{x}},\vec{y})\wedge\forall\vec{z}(R(\underline{\vec{x}},\vec{z})\rightarrow(C\wedge\phi(\vec{v})))  
 
