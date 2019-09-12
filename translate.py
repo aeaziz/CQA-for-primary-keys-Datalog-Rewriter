@@ -8,6 +8,7 @@ from fo_rewrite import *
 
 
 # Structure that takes a string query as input and parses it into a set of FD and the body of a Datalog query
+# It also keeps the status of the rewriting (New rules index, frozen variables, graphs, etc..)
 class TranslateInput:
     def __init__(self):
         self.fd = FDSet(self)
@@ -17,19 +18,19 @@ class TranslateInput:
         self.frozen = []
         self.query_index = 0
 
+    # Adds an atom
     def add_atom(self, atom):
         self.body.add_atom(atom)
         self.generate_fd_set()
         self.generate_attack_graph()
-        self.generate_attack_graph()
 
-
+    # Removes an atom
     def remove_atom(self, atom):
         self.body.remove_atom(atom)
         self.generate_fd_set()
         self.generate_attack_graph()
-        self.generate_attack_graph()
 
+    # Generates the set of FD
     def generate_fd_set(self):
         self.fd = FDSet(self)
         for atom in self.body.atoms:
@@ -69,12 +70,27 @@ class TranslateInput:
                 return False
         return True
 
+    # Checks if all the atoms of the given cycle are in the given initial strong component
+    def in_initial_strong_component(self, cycle, s):
+        for a in cycle.path[:-1]:
+            if a.name not in s:
+                return False
+        return True
+
+    # Checks if the given cycle belongs to an initial strong component in the attack graph
+    def is_initial_strong_component(self, cycle):
+        sicc = self.a_graph.strongly_initial_connected_components()
+        for s in sicc:
+            if self.in_initial_strong_component(cycle, s):
+                return True
+        return False
+
     # Translates the query
     def translate(self):
         res = []
         if not self.is_saturated():
             s = Saturator(self)
-            res = res+s.saturate()
+            res = res + s.saturate()
         if self.a_graph.all_cycles_weak():
             while len(self.a_graph.vertex) > 0:
                 not_attacked = self.a_graph.not_attacked()
@@ -84,7 +100,12 @@ class TranslateInput:
                 else:
                     m = MGraph(self)
                     cycles = m.find_cycles()
-                    delete_weak_cycle(self, cycles[0], res)
+                    i = 0
+                    cycle = cycles[i]
+                    while not self.is_initial_strong_component(cycle):
+                        i += 1
+                        cycle = cycles[i]
+                    delete_weak_cycle(self, cycle, res)
             return res
         else:
             print("The problem is Co-NPHard")

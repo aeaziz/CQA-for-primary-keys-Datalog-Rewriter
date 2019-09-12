@@ -17,14 +17,14 @@ class Saturator:
             n_query.add_atom(atom)
         return n_query
 
-    # For an atom F, for a FD Z->w, generates a queries that removes the blocks that can be removed
+    # For an atom F, for a FD Z->w, generates a rule that removes the blocks that can be removed
     def gen_sat_atom(self, f, fd):
         new_head = Atom("SAT_" + f.name)
         for value in f.content:
             if f.is_variable[f.content.index(value)]:
-                new_head.add_variable(value, False)
+                new_head.add_variable(value, f.is_key[f.content.index(value)])
             else:
-                new_head.add_constant(value, False)
+                new_head.add_constant(value, f.is_key[f.content.index(value)])
         new_query = DatalogQuery(new_head)
         new_query.add_atom(f)
 
@@ -32,7 +32,7 @@ class Saturator:
         new_query.add_atom(remove_query.head)
         return new_query, remove_query
 
-    # For an atom F, for a FD Z->w, generates a query that removes the blocks that can be removed
+    # For an atom F, for a FD Z->w, generates a rule that removes the blocks that can be removed
     def gen_remove_block(self, f, fd):
         can_be_removed = Atom("REMOVE_BLOCK_" + f.name)
         can_be_removed.negative = True
@@ -72,12 +72,14 @@ class Saturator:
 
         return query
 
+    # Ensures that the query is saturated by modifying it and creating additional Datalog rules
     def saturate(self):
         queries = []
         to_remove = []
         to_add = []
         n_index = 0
-        for fd in self.to.fd.find_internal_fd():
+        k_q_cons = self.to.k_q_cons()
+        for fd in [f for f in self.to.fd.find_internal_fd() if f.right not in k_q_cons.closure(f.left)]:
             n_query = self.gen_n_query(fd, n_index)
             n_index = n_index + 1
 

@@ -12,6 +12,7 @@ class Graph:
     def generate(self):
         pass
 
+    # As the Vertex may not be hashable, we need an unique representation for each atom that will be used as key
     def id_vertex(self, vertex):
         pass
 
@@ -55,6 +56,61 @@ class Graph:
     def remove_vertex(self, o):
         self.vertex.remove(o)
         del self.edges[self.id_vertex(o)]
+
+    # True if the given strongly connected component is initial
+    def is_initial(self, scc):
+        l = list(scc)
+        for v in self.vertex:
+            for a in self.edges[self.id_vertex(v)]:
+                if self.id_vertex(a) in l and self.id_vertex(v) not in l:
+                    return False
+        return True
+
+    # Returns a list containing all the initial strongly connected components
+    def strongly_initial_connected_components(self):
+        sccs = self.strongly_connected_components()
+        sicc = []
+        for scc in sccs:
+            if self.is_initial(scc) and len(scc)>0:
+                sicc.append(scc)
+        return  sicc
+
+    # Returns a list containing all the strongly connected components
+    def strongly_connected_components(self):
+        identified = set()
+        stack = []
+        index = {}
+        boundaries = []
+
+        for v in self.vertex:
+            if self.id_vertex(v) not in index:
+                to_do = [('VISIT', v)]
+                while to_do:
+                    operation_type, v = to_do.pop()
+                    if operation_type == 'VISIT':
+                        index[self.id_vertex(v)] = len(stack)
+                        stack.append(self.id_vertex(v))
+                        boundaries.append(index[self.id_vertex(v)])
+                        to_do.append(('POSTVISIT', v))
+                        # We reverse to keep the search order identical to that of
+                        # the recursive code;  the reversal is not necessary for
+                        # correctness, and can be omitted.
+                        to_do.extend(
+                            reversed([('VISITEDGE', w) for w in self.edges[self.id_vertex(v)]]))
+                    elif operation_type == 'VISITEDGE':
+                        if self.id_vertex(v) not in index:
+                            to_do.append(('VISIT', v))
+                        elif self.id_vertex(v) not in identified:
+                            while index[self.id_vertex(v)] < boundaries[-1]:
+                                boundaries.pop()
+                    else:
+                        # operation_type == 'POSTVISIT'
+                        if boundaries[-1] == index[self.id_vertex(v)]:
+                            boundaries.pop()
+                            scc = set(stack[index[self.id_vertex(v)]:])
+                            del stack[index[self.id_vertex(v)]:]
+                            identified.update(scc)
+                            yield scc
 
 
 # Class representing a cycle in a graph

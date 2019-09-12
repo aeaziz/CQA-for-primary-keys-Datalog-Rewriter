@@ -1,12 +1,144 @@
 
 
-% Rewriting of S(Y, a, Y, Z)
-R_0 :- S(Y, a, Y, Z), not R_1(Y).
-R_1(Y) :- S(Y, Z_0, Z_1, Z_2), not R_2(Y, Z_2, Z_0, Z_1).
-R_2(Y, Z, Z_0, Z_1) :- S(Y, Z_0, Z_1, Z), Z_0=a, Z_1=Y, R_3(Y, Z).
+% Captures facts with zero outdegree, belonging to a block containing a garbage fact
+Relevant_S1(Y1, X1) :- S1(Y1, X1), R1(X1, Y1, X2).
+Relevant_R1(X1, Y1, X2) :- S1(Y1, X1), R1(X1, Y1, X2).
+Garbage_S1(Y1) :- S1(Y1, X1), not Relevant_S1(Y1, X1).
+Garbage_R1(X1) :- R1(X1, Y1, X2), not Relevant_R1(X1, Y1, X2).
 
 
-% Rewriting of T(Z, e)
-R_3(Y, Z) :- S(Y, a, Y, Z), T(Z, e), not R_4(Y, Z).
-R_4(Y, Z) :- S(Y, a, Y, Z), T(Z, Z_0), not R_5(Y, Z, Z_0).
-R_5(Y, Z, Z_0) :- S(Y, a, Y, Z), T(Z, Z_0), Z_0=e.
+% Captures facts belonging to relevant 1-embeddings containing a garbage fact
+Garbage_S1(Y1) :- S1(Y1, X1), R1(X1, Y1, X2), Garbage_R1(X1).
+Garbage_R1(X1) :- S1(Y1, X1), R1(X1, Y1, X2), Garbage_S1(Y1).
+
+
+% Captures facts belonging to a n-embedding
+Pk_S1R1(Y11, X12, Y13) :- S1(Y11, X11), R1(X11, Y11, X21), S1(Y12, X12), R1(X12, Y12, X22), S1(Y13, X13), R1(X13, Y13, X23), X12=X11, Y13=Y12, Y11!=Y13.
+DCon_S1R1(Y15, Y15, X12) :- S1(Y15, X15), R1(X15, Y15, X25), Pk_S1R1(Y11, X12, Y13).
+DCon_S1R1(Y11, Y15, X12) :- DCon_S1R1(Y11, Y16, X12), Pk_S1R1(Y16, X14, Y15), X14!=X12.
+InLongDCycle_S1R1(Y11, X12) :- Pk_S1R1(Y11, X12, Y13), DCon_S1R1(Y13, Y11, X12).
+
+
+% All facts belonging to a n-embedding must be in the maximal garbage-set
+Garbage_S1(Y1) :- InLongDCycle_S1R1(Y1, X1).
+Garbage_R1(X1) :- InLongDCycle_S1R1(Y1, X1).
+
+
+% We keep only facts that are not in the garbage set
+Keep_S1(Y1, X1) :- S1(Y1, X1), not Garbage_S1(Y1).
+Keep_R1(X1, Y1, X2) :- R1(X1, Y1, X2), not Garbage_R1(X1).
+Link_S1R1(Y1, Y11) :- Keep_S1(Y1, X1), Keep_R1(X1, Y1, X2), Keep_S1(Y11, X11), Keep_R1(X11, Y11, X21), Y1=Y11.
+Link_S1R1(Y1, Y11) :- Keep_S1(Y1, X1), Keep_R1(X1, Y1, X2), Keep_S1(Y11, X11), Keep_R1(X11, Y11, X21), X1=X11.
+Trans_S1R1(Y1, Y15) :- Link_S1R1(Y1, Y15).
+Trans_S1R1(Y1, Y15) :- Trans_S1R1(Y1, Y16), Link_S1R1(Y16, Y15).
+Trans_S1R1(Y1, Y16) :- Trans_S1R1(Y1, Y15), Link_S1R1(Y16, Y15).
+IdentifiedBy_S1R1(Y1, Y11) :- #min{Y13 : Trans_S1R1(Y1, Y13)} = Y11, Link_S1R1(Y1, Y12).
+T_S1R1(Y15, Y1, X1, X1, Y1, X2) :- Keep_S1(Y1, X1), Keep_R1(X1, Y1, X2), IdentifiedBy_S1R1(Y1, Y15).
+N_S1(Y1, Y15) :- T_S1R1(Y15, Y1, X1, X1, Y1, X2).
+N_R1(X1, Y15) :- T_S1R1(Y15, Y1, X1, X1, Y1, X2).
+
+
+% Captures facts with zero outdegree, belonging to a block containing a garbage fact
+Relevant_S2(Y2, X2) :- S2(Y2, X2), R2(X2, Y2, X1).
+Relevant_R2(X2, Y2, X1) :- S2(Y2, X2), R2(X2, Y2, X1).
+Garbage_S2(Y2) :- S2(Y2, X2), not Relevant_S2(Y2, X2).
+Garbage_R2(X2) :- R2(X2, Y2, X1), not Relevant_R2(X2, Y2, X1).
+
+
+% Captures facts belonging to relevant 1-embeddings containing a garbage fact
+Garbage_S2(Y2) :- S2(Y2, X2), R2(X2, Y2, X1), Garbage_R2(X2).
+Garbage_R2(X2) :- S2(Y2, X2), R2(X2, Y2, X1), Garbage_S2(Y2).
+
+
+% Captures facts belonging to a n-embedding
+Pk_S2R2(Y21, X22, Y23) :- S2(Y21, X21), R2(X21, Y21, X11), S2(Y22, X22), R2(X22, Y22, X12), S2(Y23, X23), R2(X23, Y23, X13), X22=X21, Y23=Y22, Y21!=Y23.
+DCon_S2R2(Y25, Y25, X22) :- S2(Y25, X25), R2(X25, Y25, X15), Pk_S2R2(Y21, X22, Y23).
+DCon_S2R2(Y21, Y25, X22) :- DCon_S2R2(Y21, Y26, X22), Pk_S2R2(Y26, X24, Y25), X24!=X22.
+InLongDCycle_S2R2(Y21, X22) :- Pk_S2R2(Y21, X22, Y23), DCon_S2R2(Y23, Y21, X22).
+
+
+% All facts belonging to a n-embedding must be in the maximal garbage-set
+Garbage_S2(Y2) :- InLongDCycle_S2R2(Y2, X2).
+Garbage_R2(X2) :- InLongDCycle_S2R2(Y2, X2).
+
+
+% We keep only facts that are not in the garbage set
+Keep_S2(Y2, X2) :- S2(Y2, X2), not Garbage_S2(Y2).
+Keep_R2(X2, Y2, X1) :- R2(X2, Y2, X1), not Garbage_R2(X2).
+Link_S2R2(Y2, Y21) :- Keep_S2(Y2, X2), Keep_R2(X2, Y2, X1), Keep_S2(Y21, X21), Keep_R2(X21, Y21, X11), Y2=Y21.
+Link_S2R2(Y2, Y21) :- Keep_S2(Y2, X2), Keep_R2(X2, Y2, X1), Keep_S2(Y21, X21), Keep_R2(X21, Y21, X11), X2=X21.
+Trans_S2R2(Y2, Y25) :- Link_S2R2(Y2, Y25).
+Trans_S2R2(Y2, Y25) :- Trans_S2R2(Y2, Y26), Link_S2R2(Y26, Y25).
+Trans_S2R2(Y2, Y26) :- Trans_S2R2(Y2, Y25), Link_S2R2(Y26, Y25).
+IdentifiedBy_S2R2(Y2, Y21) :- #min{Y23 : Trans_S2R2(Y2, Y23)} = Y21, Link_S2R2(Y2, Y22).
+T_S2R2(Y25, Y2, X2, X2, Y2, X1) :- Keep_S2(Y2, X2), Keep_R2(X2, Y2, X1), IdentifiedBy_S2R2(Y2, Y25).
+N_S2(Y2, Y25) :- T_S2R2(Y25, Y2, X2, X2, Y2, X1).
+N_R2(X2, Y25) :- T_S2R2(Y25, Y2, X2, X2, Y2, X1).
+
+
+% Captures facts with zero outdegree, belonging to a block containing a garbage fact
+Relevant_T_S1R1(Y15, Y1, X1, X1, Y1, X2) :- T_S1R1(Y15, Y1, X1, X1, Y1, X2), T_S2R2(Y25, Y2, X2, X2, Y2, X1).
+Relevant_T_S2R2(Y25, Y2, X2, X2, Y2, X1) :- T_S1R1(Y15, Y1, X1, X1, Y1, X2), T_S2R2(Y25, Y2, X2, X2, Y2, X1).
+Garbage_T_S1R1(Y15) :- T_S1R1(Y15, Y1, X1, X1, Y1, X2), not Relevant_T_S1R1(Y15, Y1, X1, X1, Y1, X2).
+Garbage_T_S2R2(Y25) :- T_S2R2(Y25, Y2, X2, X2, Y2, X1), not Relevant_T_S2R2(Y25, Y2, X2, X2, Y2, X1).
+
+
+% Captures facts belonging to relevant 1-embeddings containing a garbage fact
+Garbage_T_S1R1(Y15) :- T_S1R1(Y15, Y1, X1, X1, Y1, X2), T_S2R2(Y25, Y2, X2, X2, Y2, X1), Garbage_T_S2R2(Y25).
+Garbage_T_S2R2(Y25) :- T_S1R1(Y15, Y1, X1, X1, Y1, X2), T_S2R2(Y25, Y2, X2, X2, Y2, X1), Garbage_T_S1R1(Y15).
+
+
+% Captures facts belonging to a n-embedding
+Pk_T_S1R1T_S2R2(Y151, Y252, Y153) :- T_S1R1(Y151, Y16, X11, X11, Y16, X21), T_S2R2(Y251, Y26, X21, X21, Y26, X11), T_S1R1(Y152, Y17, X12, X12, Y17, X22), T_S2R2(Y252, Y27, X22, X22, Y27, X12), T_S1R1(Y153, Y18, X13, X13, Y18, X23), T_S2R2(Y253, Y28, X23, X23, Y28, X13), Y252=Y251, Y153=Y152, Y151!=Y153.
+DCon_T_S1R1T_S2R2(Y155, Y155, Y252) :- T_S1R1(Y155, Y110, X15, X15, Y110, X25), T_S2R2(Y255, Y210, X25, X25, Y210, X15), Pk_T_S1R1T_S2R2(Y151, Y252, Y153).
+DCon_T_S1R1T_S2R2(Y151, Y155, Y252) :- DCon_T_S1R1T_S2R2(Y151, Y156, Y252), Pk_T_S1R1T_S2R2(Y156, Y254, Y155), Y254!=Y252.
+InLongDCycle_T_S1R1T_S2R2(Y151, Y252) :- Pk_T_S1R1T_S2R2(Y151, Y252, Y153), DCon_T_S1R1T_S2R2(Y153, Y151, Y252).
+
+
+% All facts belonging to a n-embedding must be in the maximal garbage-set
+Garbage_T_S1R1(Y15) :- InLongDCycle_T_S1R1T_S2R2(Y15, Y25).
+Garbage_T_S2R2(Y25) :- InLongDCycle_T_S1R1T_S2R2(Y15, Y25).
+
+
+% We keep only facts that are not in the garbage set
+Keep_T_S1R1(Y15, Y1, X1, X1, Y1, X2) :- T_S1R1(Y15, Y1, X1, X1, Y1, X2), not Garbage_T_S1R1(Y15).
+Keep_T_S2R2(Y25, Y2, X2, X2, Y2, X1) :- T_S2R2(Y25, Y2, X2, X2, Y2, X1), not Garbage_T_S2R2(Y25).
+Link_T_S1R1T_S2R2(Y15, Y151) :- Keep_T_S1R1(Y15, Y1, X1, X1, Y1, X2), Keep_T_S2R2(Y25, Y2, X2, X2, Y2, X1), Keep_T_S1R1(Y151, Y16, X11, X11, Y16, X21), Keep_T_S2R2(Y251, Y26, X21, X21, Y26, X11), Y15=Y151.
+Link_T_S1R1T_S2R2(Y15, Y151) :- Keep_T_S1R1(Y15, Y1, X1, X1, Y1, X2), Keep_T_S2R2(Y25, Y2, X2, X2, Y2, X1), Keep_T_S1R1(Y151, Y16, X11, X11, Y16, X21), Keep_T_S2R2(Y251, Y26, X21, X21, Y26, X11), Y25=Y251.
+Trans_T_S1R1T_S2R2(Y15, Y155) :- Link_T_S1R1T_S2R2(Y15, Y155).
+Trans_T_S1R1T_S2R2(Y15, Y155) :- Trans_T_S1R1T_S2R2(Y15, Y156), Link_T_S1R1T_S2R2(Y156, Y155).
+Trans_T_S1R1T_S2R2(Y15, Y156) :- Trans_T_S1R1T_S2R2(Y15, Y155), Link_T_S1R1T_S2R2(Y156, Y155).
+IdentifiedBy_T_S1R1T_S2R2(Y15, Y151) :- #min{Y153 : Trans_T_S1R1T_S2R2(Y15, Y153)} = Y151, Link_T_S1R1T_S2R2(Y15, Y152).
+T_T_S1R1T_S2R2(Y155, Y15, Y1, X1, X1, Y1, X2, Y25, Y2, X2, X2, Y2, X1) :- Keep_T_S1R1(Y15, Y1, X1, X1, Y1, X2), Keep_T_S2R2(Y25, Y2, X2, X2, Y2, X1), IdentifiedBy_T_S1R1T_S2R2(Y15, Y155).
+N_T_S1R1(Y15, Y155) :- T_T_S1R1T_S2R2(Y155, Y15, Y1, X1, X1, Y1, X2, Y25, Y2, X2, X2, Y2, X1).
+N_T_S2R2(Y25, Y155) :- T_T_S1R1T_S2R2(Y155, Y15, Y1, X1, X1, Y1, X2, Y25, Y2, X2, X2, Y2, X1).
+
+
+% Rewriting of T_T_S1R1T_S2R2(Y155, Y15, Y1, X1, X1, Y1, X2, Y25, Y2, X2, X2, Y2, X1)
+R_0 :- T_T_S1R1T_S2R2(Y155, Y15, Y1, X1, X1, Y1, X2, Y25, Y2, X2, X2, Y2, X1), not R_1(Y155).
+R_1(Y155) :- T_T_S1R1T_S2R2(Y155, Z_0, Z_1, Z_2, Z_3, Z_4, Z_5, Z_6, Z_7, Z_8, Z_9, Z_10, Z_11), not R_2(Y155, Z_0, Z_1, Z_2, Z_5, Z_6, Z_7, Z_3, Z_4, Z_8, Z_9, Z_10, Z_11).
+R_2(Y155, Y15, Y1, X1, X2, Y25, Y2, Z_3, Z_4, Z_8, Z_9, Z_10, Z_11) :- T_T_S1R1T_S2R2(Y155, Y15, Y1, X1, Z_3, Z_4, X2, Y25, Y2, Z_8, Z_9, Z_10, Z_11), Z_3=X1, Z_4=Y1, Z_8=X2, Z_9=X2, Z_10=Y2, Z_11=X1, R_3(Y155, Y15, Y1, X1, X2, Y25, Y2).
+
+
+% Rewriting of N_R1(X1, Y15)
+R_3(Y155, Y15, Y1, X1, X2, Y25, Y2) :- T_T_S1R1T_S2R2(Y155, Y15, Y1, X1, X1, Y1, X2, Y25, Y2, X2, X2, Y2, X1), N_R1(X1, Y15), R_4(Y155, Y15, Y1, X1, X2, Y25, Y2).
+
+
+% Rewriting of N_S1(Y1, Y15)
+R_4(Y155, Y15, Y1, X1, X2, Y25, Y2) :- T_T_S1R1T_S2R2(Y155, Y15, Y1, X1, X1, Y1, X2, Y25, Y2, X2, X2, Y2, X1), N_R1(X1, Y15), N_S1(Y1, Y15), R_5(Y155, Y15, Y1, X1, X2, Y25, Y2).
+
+
+% Rewriting of N_R2(X2, Y25)
+R_5(Y155, Y15, Y1, X1, X2, Y25, Y2) :- T_T_S1R1T_S2R2(Y155, Y15, Y1, X1, X1, Y1, X2, Y25, Y2, X2, X2, Y2, X1), N_R1(X1, Y15), N_S1(Y1, Y15), N_R2(X2, Y25), R_6(Y155, Y15, Y1, X1, X2, Y25, Y2).
+
+
+% Rewriting of N_S2(Y2, Y25)
+R_6(Y155, Y15, Y1, X1, X2, Y25, Y2) :- T_T_S1R1T_S2R2(Y155, Y15, Y1, X1, X1, Y1, X2, Y25, Y2, X2, X2, Y2, X1), N_R1(X1, Y15), N_S1(Y1, Y15), N_R2(X2, Y25), N_S2(Y2, Y25), R_7(Y155, Y15, Y1, X1, X2, Y25, Y2).
+
+
+% Rewriting of N_T_S2R2(Y25, Y155)
+R_7(Y155, Y15, Y1, X1, X2, Y25, Y2) :- T_T_S1R1T_S2R2(Y155, Y15, Y1, X1, X1, Y1, X2, Y25, Y2, X2, X2, Y2, X1), N_R1(X1, Y15), N_S1(Y1, Y15), N_R2(X2, Y25), N_S2(Y2, Y25), N_T_S2R2(Y25, Y155), R_8(Y155, Y15, Y1, X1, X2, Y25, Y2).
+
+
+% Rewriting of N_T_S1R1(Y15, Y155)
+R_8(Y155, Y15, Y1, X1, X2, Y25, Y2) :- T_T_S1R1T_S2R2(Y155, Y15, Y1, X1, X1, Y1, X2, Y25, Y2, X2, X2, Y2, X1), N_R1(X1, Y15), N_S1(Y1, Y15), N_R2(X2, Y25), N_S2(Y2, Y25), N_T_S2R2(Y25, Y155), N_T_S1R1(Y15, Y155).

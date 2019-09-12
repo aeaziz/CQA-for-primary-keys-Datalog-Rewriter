@@ -89,7 +89,7 @@ class Atom:
         return res
 
     def __eq__(self, other):
-        return self.content == other.content and self.name == other.name
+        return type(self) == type(other) and self.content == other.content and self.name == other.name
 
     def __str__(self):
         prefix = ""
@@ -124,6 +124,9 @@ class EqualityAtom:
     def __repr__(self):
         return self.__str__()
 
+    def __eq__(self, other):
+        return type(self) == type(other) and self.left == other.left and self.right == other.right
+
 
 # Represents the min atom used in Datalog
 class MinAtom:
@@ -138,6 +141,9 @@ class MinAtom:
     def __repr__(self):
         return self.__str__()
 
+    def __eq__(self, other):
+        return type(self) == type(other) and self.var1 == other.var1 and self.var2 == other.var2 and self.atom == other.atom
+
 
 # Represents the body of a datalog query
 class DatalogBody:
@@ -148,10 +154,11 @@ class DatalogBody:
 
     # Adds an atom
     def add_atom(self, atom):
-        self.atoms.append(atom)
-        if type(atom) == "Atom":
-            self.variables = self.variables.union(set(atom.get_variables()))
-            self.constants = self.constants.union(set(atom.get_constants()))
+        if atom not in self.atoms:
+            self.atoms.append(atom)
+            if type(atom) == Atom:
+                self.variables = self.variables.union(set(atom.get_variables()))
+                self.constants = self.constants.union(set(atom.get_constants()))
 
     # Rebuilds the set of variables and constants
     def rebuild_sets(self):
@@ -205,3 +212,6 @@ class DatalogQuery:
 
     def __str__(self):
         return self.head.str_as_head() + " :- " + self.body.__str__() + "."
+
+    def __repr__(self):
+        return self.__str__()

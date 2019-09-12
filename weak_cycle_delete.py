@@ -1,7 +1,8 @@
 from datalog import DatalogQuery, DatalogBody, Atom, MinAtom, EqualityAtom
-from cycle_queries import *
+from cycle_rules import *
 
 
+# Returns the set of variables in a given cycle
 def find_all_variables_in_cycle(cycle):
     variables = []
     for atom in cycle.path[:-1]:
@@ -11,6 +12,7 @@ def find_all_variables_in_cycle(cycle):
     return variables
 
 
+# Generates n valuations for a given set of variables
 def generate_n_valuations(variables, n):
     valuations = []
     for i in range(0, int(n)):
@@ -28,6 +30,7 @@ def generate_n_valuations(variables, n):
     return valuations
 
 
+# Deletes the given cycle by adding new facts and rules
 def delete_weak_cycle(t, cycle, res):
     variables = find_all_variables_in_cycle(cycle)
     k = len(cycle.path) - 1
@@ -68,6 +71,7 @@ def delete_weak_cycle(t, cycle, res):
     t.generate_attack_graph()
 
 
+# Adds to res the RelevantQuery, DirectGarbageQuery and RelevantGarbageQuery objects
 def construct_relevant_queries(cycle, res):
     relevant = {}
     garbage = {}
@@ -89,30 +93,31 @@ def construct_relevant_queries(cycle, res):
         res.append(relevantGarbage[q])
 
 
+# Adds to res the PKQuery objects
 def construct_pk_query(cycle, res, valuations, cycle_code):
     res.append("% Captures facts belonging to a n-embedding")
     res.append(PKQuery(cycle, valuations, cycle_code))
 
-
+# Adds to res the RecDConQuery objects
 def construct_rec_dcon_query(cycle, res, valuations, sp1, sp2, cycle_code):
     res.append(RecDConQuery(cycle, valuations, sp1, sp2, cycle_code))
 
-
+# Adds to res the BaseDConQuery objects
 def construct_base_dcon_query(cycle, res, valuations, sp1, cycle_code):
     res.append(BaseDConQuery(cycle, valuations, sp1, cycle_code))
 
-
+# Adds to res the InLongDCycleQuery objects
 def construct_in_long_cycle_query(cycle, res, valuations, cycle_code):
     res.append(InLongDCycleQuery(cycle, valuations, cycle_code))
 
-
+# Adds to res the GarbageLongQuery objects
 def construct_long_garbage_queries(cycle, res, cycle_code):
     res.append("% All facts belonging to a n-embedding must be in the maximal garbage-set")
     body = Atom("InLongDCycle_" + cycle_code)
     for atom in cycle.path[:-1]:
-        res.append(GarbageLonQuery(atom, body))
+        res.append(GarbageLongQuery(atom, body))
 
-
+# Adds to res the KeepQuery objects
 def construct_keep_queries(cycle, res):
     res.append("% We keep only facts that are not in the garbage set")
     for atom in cycle.path[:-1]:

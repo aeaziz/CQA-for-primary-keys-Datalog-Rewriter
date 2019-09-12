@@ -2,9 +2,9 @@ from datalog import *
 
 
 # Computes the values to be used
-def calculate_values(atom):
+def calculate_values(t, atom):
     # V
-    v = atom.get_variables()
+    v = [value for value in atom.get_variables()]
     # X
     x = atom.get_key_variables()
     # Y
@@ -15,7 +15,7 @@ def calculate_values(atom):
     # C
     c = []
     for j in range(0, len(y)):
-        if y[j] in atom.get_constants() or y[j] in x or y[j] in y[:j]:
+        if y[j] not in v or y[j] in x or y[j] in y[:j]:
             c.append(EqualityAtom(z[j], y[j]))
             z_re[j] = True
 
@@ -41,7 +41,7 @@ def calculate_values(atom):
 # Rewrites an atom in Datalog using the FO Logic formula : For some v, R(x,y) and For all z, R(x,z) -> C and rec_call
 def rewrite_fo(t, atom, has_next, res=[], atoms_done=[]):
     res.append("% Rewriting of " + str(atom))
-    v, x, y, z, z_re, atom_with_z, atom_with_z_re, c = calculate_values(atom)
+    v, x, y, z, z_re, atom_with_z, atom_with_z_re, c = calculate_values(t, atom)
     q1 = construct_first_query(t, atom, atoms_done, x)
     res.append(q1)
 
@@ -83,6 +83,8 @@ def construct_first_query(t, atom, atoms_done, x):
     for var in x:
         if var not in t.frozen:
             t.freeze_variable(var)
+
+
     return q1
 
 
@@ -115,6 +117,7 @@ def construct_second_query(t, atom_with_z, atoms_done, v, z, z_re):
             head_next.add_variable(var, False)
 
     q2.add_atom(head_next)
+
     return q2
 
 

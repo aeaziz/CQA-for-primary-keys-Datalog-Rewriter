@@ -7,6 +7,7 @@ class MGraph(Graph):
     def __init__(self, t):
         super(MGraph, self).__init__(t)
 
+    # As the Vertex may not be hashable, we need an unique representation for each atom that will be used as key
     def id_vertex(self, vertex):
         return vertex.name
 

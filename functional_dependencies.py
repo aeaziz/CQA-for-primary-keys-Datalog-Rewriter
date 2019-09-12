@@ -61,7 +61,8 @@ class FDSet:
     def is__internal_fd(self, sp):
         if len(self.find_f(sp.fd.left)) == 0:
             return False
-        variables = set(sp.fd.left).union(sp.fd.right)
+        variables = set(sp.fd.left)
+        variables.add(sp.fd.right)
         banned_relations = []
         for variable in variables:
             banned_relations = banned_relations + self.q.a_graph.attacks_variable(variable)
@@ -101,3 +102,6 @@ class SequentialProof:
             value1 = [value1]
         self.fd = FD(value1, v2)
         self.proof = p
+
+    def __str__(self):
+        return str(self.fd.left)+"-->"+self.fd.right+"("+str(self.proof)+")"
