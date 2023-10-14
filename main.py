@@ -1,4 +1,4 @@
-from parser import *
+from parser import Parser
 from tests import *
 
 print("The following script generates a Datalog program (if possible) from a file containing a boolean sjfBCQ query")
